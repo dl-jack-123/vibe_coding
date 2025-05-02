@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "../styles/globals.css";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "塔羅牌占卜 | 探索你的命運",
-  description: "專業的線上塔羅牌占卜服務，幫助你探索生活中的問題與機遇",
+  title: "塔羅占卜",
+  description: "探索命運的智慧，解答人生的疑惑",
 };
 
 export default function RootLayout({
@@ -16,10 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-TW">
-      <body className={inter.className}>
-        <main className="min-h-screen bg-gradient-to-b from-gray-900 to-purple-900 text-white">
+      <body className={`${inter.className} min-h-screen flex flex-col`}>
+        <Navbar />
+        <div className="flex-1 pt-20">
           {children}
-        </main>
+        </div>
       </body>
     </html>
   );

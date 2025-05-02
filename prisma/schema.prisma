@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String?
+  avatar    String?
+  bio       String?
+  isReader  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  readings  Reading[]
+  sharedReadings SharedReading[]
+  comments  Comment[]
+  readerProfile ReaderProfile?
+  userBookings Booking[] @relation("UserBookings")
+  readerBookings Booking[] @relation("ReaderBookings")
+  timeSlots TimeSlot[] @relation("ReaderTimeSlots")
+}
+
+model ReaderProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  specialties String[]
+  experience  Int      // 年資
+  rating      Float    @default(0)
+  price       Float    // 每小時收費
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Reading {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  question  String
+  spreadType String
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  cards     Card[]
+  sharedReadings SharedReading[]
+  comments  Comment[]
+}
+
+model SharedReading {
+  id        String   @id @default(cuid())
+  readingId String
+  reading   Reading  @relation(fields: [readingId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  readingId String
+  reading   Reading  @relation(fields: [readingId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Card {
+  id        String   @id @default(cuid())
+  readingId String
+  reading   Reading  @relation(fields: [readingId], references: [id])
+  cardId    Int
+  position  Int
+  isReversed Boolean @default(false)
+  createdAt DateTime @default(now())
+}
+
+model TimeSlot {
+  id        String   @id @default(cuid())
+  readerId  String
+  reader    User     @relation("ReaderTimeSlots", fields: [readerId], references: [id])
+  startTime DateTime
+  endTime   DateTime
+  isBooked  Boolean  @default(false)
+  bookings  Booking[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserBookings", fields: [userId], references: [id])
+  readerId  String
+  reader    User     @relation("ReaderBookings", fields: [readerId], references: [id])
+  timeSlotId String
+  timeSlot  TimeSlot @relation(fields: [timeSlotId], references: [id])
+  note      String?
+  status    String   @default("pending") // pending, confirmed, cancelled, completed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
