@@ -107,36 +107,49 @@ export default function TarotPage() {
 
         {/* 卡片展示區域 */}
         {drawnCards.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {drawnCards.map((card, index) => (
-              <motion.div
-                key={card.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {drawnCards.map((card, index) => (
+                <motion.div
+                  key={card.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                >
+                  <div className="bg-white/10 backdrop-blur-sm border-white/20 rounded-lg p-6">
+                    <h3 className="text-white text-center text-xl font-bold mb-4">
+                      {card.position}
+                    </h3>
+                    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg mb-4">
+                      <Image
+                        src={card.imageUrl}
+                        alt={card.name}
+                        fill
+                        className={`object-cover ${card.isReversed ? 'transform rotate-180' : ''}`}
+                      />
+                    </div>
+                    <div className="text-white">
+                      <h4 className="text-lg font-semibold mb-2">{card.name}</h4>
+                      <p className="text-sm text-white/80">
+                        {card.isReversed ? '逆位' : '正位'}含義：{card.meaning.join('、')}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <button
+                className="px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-bold"
+                onClick={() => {
+                  const encoded = encodeURIComponent(JSON.stringify(drawnCards));
+                  router.push(`/reading/new?cards=${encoded}`);
+                }}
               >
-                <div className="bg-white/10 backdrop-blur-sm border-white/20 rounded-lg p-6">
-                  <h3 className="text-white text-center text-xl font-bold mb-4">
-                    {card.position}
-                  </h3>
-                  <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg mb-4">
-                    <Image
-                      src={card.imageUrl}
-                      alt={card.name}
-                      fill
-                      className={`object-cover ${card.isReversed ? 'transform rotate-180' : ''}`}
-                    />
-                  </div>
-                  <div className="text-white">
-                    <h4 className="text-lg font-semibold mb-2">{card.name}</h4>
-                    <p className="text-sm text-white/80">
-                      {card.isReversed ? '逆位' : '正位'}含義：{card.meaning.join('、')}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                前往解讀
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>

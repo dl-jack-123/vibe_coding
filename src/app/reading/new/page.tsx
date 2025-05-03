@@ -31,7 +31,6 @@ function ReadingNewContent() {
       try {
         const decodedCards = JSON.parse(decodeURIComponent(cardsParam));
         setCards(decodedCards);
-        generateInterpretation(decodedCards);
       } catch (error) {
         console.error('解析卡片數據時出錯:', error);
       }
@@ -152,18 +151,21 @@ function ReadingNewContent() {
         {/* 整體解讀 */}
         <div className="bg-white/10 backdrop-blur-lg rounded-lg p-6 shadow-lg">
           <h2 className="text-2xl font-bold text-white mb-4">整體解讀</h2>
-          {isGenerating ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-              <span className="ml-3 text-white">正在生成解讀...</span>
-            </div>
-          ) : interpretation ? (
+          {interpretation ? (
             <div 
               className="prose prose-invert max-w-none"
               dangerouslySetInnerHTML={{ __html: interpretation }}
             />
           ) : (
-            <p className="text-white/80">無法生成解讀</p>
+            <div className="text-center my-8">
+              <button
+                onClick={() => generateInterpretation(cards)}
+                className="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded-full text-white font-bold"
+                disabled={isGenerating || cards.length === 0}
+              >
+                {isGenerating ? '正在解牌...' : '解牌'}
+              </button>
+            </div>
           )}
         </div>
 
