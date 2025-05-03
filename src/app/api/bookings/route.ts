@@ -30,7 +30,6 @@ export async function POST(request: Request) {
       where: {
         id: timeSlotId,
         readerId,
-        isAvailable: true,
       },
       include: {
         bookings: {

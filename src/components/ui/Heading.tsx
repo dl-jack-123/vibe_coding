@@ -1,30 +1,25 @@
-import { HTMLAttributes, forwardRef } from 'react';
+import { forwardRef, ElementType, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
-interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
+interface HeadingProps {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   variant?: 'default' | 'gradient';
+  className?: string;
+  children: ReactNode;
 }
 
 const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
-  ({ className, level = 1, variant = 'default', children, ...props }, ref) => {
-    const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  ({ level = 1, variant = 'default', className, children, ...props }, ref) => {
+    const Tag = `h${level}` as ElementType;
 
     return (
       <Tag
         ref={ref}
         className={cn(
           'font-bold tracking-tight',
-          {
-            'text-4xl md:text-5xl': level === 1,
-            'text-3xl md:text-4xl': level === 2,
-            'text-2xl md:text-3xl': level === 3,
-            'text-xl md:text-2xl': level === 4,
-            'text-lg md:text-xl': level === 5,
-            'text-base md:text-lg': level === 6,
-            'bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent':
-              variant === 'gradient',
-          },
+          variant === 'gradient'
+            ? 'bg-gradient-to-r from-purple-400 to-indigo-400 text-transparent bg-clip-text'
+            : 'text-white',
           className
         )}
         {...props}

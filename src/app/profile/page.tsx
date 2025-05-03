@@ -96,8 +96,9 @@ export default function ProfilePage() {
                   return (
                     <TarotCard
                       key={card.id}
-                      card={tarotCard}
-                      isRevealed={true}
+                      imageUrl={tarotCard.imageUrl}
+                      title={tarotCard.name}
+                      meaning={card.isReversed ? [tarotCard.reversedMeaning] : [tarotCard.uprightMeaning]}
                       isReversed={card.isReversed}
                     />
                   )

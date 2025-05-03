@@ -31,6 +31,7 @@ export default function ReadingPage() {
   const [step, setStep] = useState<'select' | 'question' | 'drawing' | 'result'>('select')
   const [cards, setCards] = useState<TarotCardType[]>([])
   const [revealedCards, setRevealedCards] = useState<boolean[]>([])
+  const [cardStates, setCardStates] = useState<{ isReversed: boolean }[]>([])
 
   useEffect(() => {
     if (step === 'drawing') {
@@ -39,7 +40,7 @@ export default function ReadingPage() {
         const drawnCards = getRandomCards(spread.cardCount)
         setCards(drawnCards)
         setRevealedCards(new Array(spread.cardCount).fill(false))
-        
+        setCardStates(drawnCards.map(() => ({ isReversed: Math.random() > 0.5 })))
         // 自動翻牌動畫
         drawnCards.forEach((_, index) => {
           setTimeout(() => {
@@ -50,7 +51,6 @@ export default function ReadingPage() {
             })
           }, index * 1000 + 1000)
         })
-
         // 完成後轉到結果頁面
         setTimeout(() => {
           setStep('result')
@@ -130,9 +130,10 @@ export default function ReadingPage() {
             {cards.map((card, index) => (
               <TarotCard
                 key={index}
-                card={card}
-                isRevealed={revealedCards[index]}
-                isReversed={Math.random() > 0.5}
+                imageUrl={card.imageUrl}
+                title={card.name}
+                meaning={cardStates[index]?.isReversed ? [card.reversedMeaning] : [card.uprightMeaning]}
+                isReversed={cardStates[index]?.isReversed}
               />
             ))}
           </div>
@@ -150,9 +151,10 @@ export default function ReadingPage() {
             {cards.map((card, index) => (
               <TarotCard
                 key={index}
-                card={card}
-                isRevealed={true}
-                isReversed={Math.random() > 0.5}
+                imageUrl={card.imageUrl}
+                title={card.name}
+                meaning={cardStates[index]?.isReversed ? [card.reversedMeaning] : [card.uprightMeaning]}
+                isReversed={cardStates[index]?.isReversed}
               />
             ))}
           </div>
@@ -163,6 +165,7 @@ export default function ReadingPage() {
                 setCards([])
                 setRevealedCards([])
                 setQuestion('')
+                setCardStates([])
               }}
               className="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded-full"
             >

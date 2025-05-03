@@ -1,0 +1,8 @@
+Please generate a Git commit message that follows the Conventional Commits specification.
+
+Requirements:
+- Use the format: <type>(<scope>): <subject>
+- The <type> can be: feat, fix, docs, style, refactor, test, or chore.
+- Use a short, imperative sentence for the <subject>, written in lowercase and without a period at the end.
+- Optionally include a body describing what was changed and why (if applicable).
+- Optionally include a footer with issue references or breaking changes (e.g., BREAKING CHANGE: ... or Fixes #123).

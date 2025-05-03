@@ -43,7 +43,7 @@ export async function GET(
       id: slot.id,
       startTime: slot.startTime,
       endTime: slot.endTime,
-      isAvailable: slot.isAvailable && slot.bookings.length === 0,
+      isAvailable: 0,
     }))
 
     return NextResponse.json(processedTimeSlots)

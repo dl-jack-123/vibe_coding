@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -18,7 +18,7 @@ interface CardData {
   meaning: string[];
 }
 
-export default function NewReadingPage() {
+function ReadingNewContent() {
   const searchParams = useSearchParams();
   const [cards, setCards] = useState<CardData[]>([]);
   const [interpretation, setInterpretation] = useState<string>('');
@@ -193,5 +193,13 @@ export default function NewReadingPage() {
         </div> */}
       </div>
     </div>
+  );
+}
+
+export default function ReadingNewPage() {
+  return (
+    <Suspense fallback={<div className="text-white text-center py-12">載入中...</div>}>
+      <ReadingNewContent />
+    </Suspense>
   );
 } 
